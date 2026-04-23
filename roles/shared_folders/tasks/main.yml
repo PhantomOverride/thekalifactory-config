@@ -1,0 +1,55 @@
+# QEMU/KVM 9p shared folder
+- name: Check for 9p virtio shared mount tag
+  shell: cat /sys/bus/virtio/devices/*/mount_tag 2>/dev/null | grep -qx shared
+  register: qemu_shared
+  changed_when: false
+  failed_when: false
+
+- name: Create /mnt/qemu-shared mount point
+  file:
+    path: /mnt/qemu-shared
+    state: directory
+    mode: "0755"
+  when: qemu_shared.rc == 0
+
+- name: Mount QEMU 9p shared folder via fstab
+  mount:
+    path: /mnt/qemu-shared
+    src: shared
+    fstype: 9p
+    opts: trans=virtio,version=9p2000.L,nofail,x-systemd.device-timeout=5
+    state: mounted
+  when: qemu_shared.rc == 0
+
+# VMware HGFS shared folder
+- name: Check if vmhgfs-fuse is available
+  command: which vmhgfs-fuse
+  register: vmhgfs_bin
+  changed_when: false
+  failed_when: false
+
+- name: Check if VMware HGFS shared folder 'shared' exists
+  stat:
+    path: /mnt/hgfs/shared
+  register: vmware_hgfs_shared
+  when: vmhgfs_bin.rc == 0
+
+- name: Create /mnt/vmware-shared mount point
+  file:
+    path: /mnt/vmware-shared
+    state: directory
+    mode: "0755"
+  when:
+    - vmhgfs_bin.rc == 0
+    - vmware_hgfs_shared.stat.exists | default(false)
+
+- name: Mount VMware shared folder via fstab
+  mount:
+    path: /mnt/vmware-shared
+    src: ".host:/shared"
+    fstype: fuse.vmhgfs-fuse
+    opts: allow_other,uid=1000,gid=1000,nofail,x-systemd.device-timeout=5
+    state: mounted
+  when:
+    - vmhgfs_bin.rc == 0
+    - vmware_hgfs_shared.stat.exists | default(false)

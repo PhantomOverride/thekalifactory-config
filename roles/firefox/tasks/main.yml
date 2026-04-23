@@ -1,0 +1,36 @@
+- name: Ensure Firefox ESR policy folder exists
+  ansible.builtin.file:
+    path: /usr/share/firefox-esr/distribution
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Deploy policies.json
+  ansible.builtin.copy:
+    dest: /usr/share/firefox-esr/distribution/policies.json
+    src: firefox_policies.json
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure Firefox config folder exists
+  ansible.builtin.file:
+    path: /opt/firefox-config
+    state: directory
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: '0755'
+
+- name: Copy Foxy Proxy settings to allow for manual import
+  ansible.builtin.copy:
+    dest: /opt/firefox-config/foxy_proxy_export.json
+    src: foxy_proxy_export.json
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: '0644'
+
+- name: Remove Kali distribution.ini
+  ansible.builtin.file:
+    path: /usr/lib/firefox-esr/distribution/distribution.ini
+    state: absent

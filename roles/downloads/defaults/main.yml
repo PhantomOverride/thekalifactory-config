@@ -1,0 +1,14 @@
+# Directory where downloaded files will be placed
+downloads_dir: /opt/downloads
+
+# List of files to download.
+# Each entry must have 'url' and 'filename'.
+# Optionally provide 'sha256' for checksum verification.
+# If sha256 is omitted the file is downloaded without integrity check.
+downloads:
+  - url: https://download.sysinternals.com/files/SysinternalsSuite.zip
+    filename: SysinternalsSuite.zip
+    sha256: e7da9bf052e03968aea666877937037522ff447b838568c6b1be3ea24e3062e9
+  - url: https://github.com/GhostPack/Rubeus/archive/refs/tags/1.6.4.zip
+    filename: Rubeus-1.6.4.zip
+    sha256: 077f01cb838aa7b46ab89510f18dbbcf062f55b5ee00fd103be375fc0297f2c6

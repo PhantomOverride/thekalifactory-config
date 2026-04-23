@@ -1,0 +1,24 @@
+# Deploy helper scripts into /opt/scripts
+
+- name: Ensure /opt/scripts directory exists
+  file:
+    path: /opt/scripts
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Gather helper scripts shipped with this role
+  ansible.builtin.set_fact:
+    helper_scripts_files: "{{ query('fileglob', role_path ~ '/files/*') }}"
+
+- name: Copy helper scripts into /opt/scripts and make them executable
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/opt/scripts/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ helper_scripts_files }}"
+  when: helper_scripts_files | length > 0
+

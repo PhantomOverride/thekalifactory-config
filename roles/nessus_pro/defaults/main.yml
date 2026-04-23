@@ -1,0 +1,10 @@
+# Default settings for Nessus Pro APT package download
+nessus_pro_deb_url: "https://www.tenable.com/downloads/api/v2/pages/nessus/files/Nessus-10.11.3-ubuntu1604_amd64.deb"
+nessus_pro_deb_filename: "Nessus-10.11.3-ubuntu1604_amd64.deb"
+nessus_pro_deb_dest: "/opt/nessus/{{ nessus_pro_deb_filename }}"
+
+# License can be placed here or in vars/licenses.yml
+nessus_pro_license: ""
+
+# Can be set here but is overridden by vars/vars.yml
+the_user: "kali"

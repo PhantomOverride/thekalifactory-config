@@ -1,0 +1,8 @@
+# Directory where repos will be cloned
+github_repos_dir: /opt/github-repos
+
+github_repos:
+  - https://github.com/irsdl/IIS-ShortName-Scanner
+  - https://github.com/PhantomOverride/dnscidr
+  - https://github.com/nicocha30/ligolo-ng
+  - https://github.com/fiddyschmitt/File-Tunnel

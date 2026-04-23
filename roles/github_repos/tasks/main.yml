@@ -1,0 +1,21 @@
+- name: Ensure git is installed
+  ansible.builtin.apt:
+    name: git
+    state: present
+
+- name: Create base directory for cloned repos
+  ansible.builtin.file:
+    path: "{{ github_repos_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+
+- name: Clone GitHub repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "{{ github_repos_dir }}/{{ item | urlsplit('path') | basename | regex_replace('\\.git$', '') }}"
+    depth: 1
+    update: true
+  become_user: "{{ the_user }}"
+  loop: "{{ github_repos }}"

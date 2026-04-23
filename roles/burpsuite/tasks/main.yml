@@ -1,0 +1,76 @@
+# Kali comes with the package burpsuite which is the free community edition
+- name: Remove burpsuite community edition from Kali
+  apt:
+    name: burpsuite
+    state: absent
+    purge: true
+
+# Install Burp Suite Professional
+- name: Check if Burp Suite Pro is already installed
+  stat:
+    path: /opt/burpsuitepro/BurpSuitePro
+  register: burpsuitepro_path
+
+- name: Create Burp Suite install directory
+  file:
+    path: /opt/burpsuitepro
+    state: directory
+    mode: "0755"
+  when: not burpsuitepro_path.stat.exists
+
+- name: Download Burp Suite Pro installer
+  get_url:
+    url: "{{ burpsuitepro_url }}"
+    dest: /var/tmp/burpsuitepro_install.sh
+    mode: "0755"
+    checksum: "{{ burpsuitepro_checksum | default(omit, true) }}"
+  when: not burpsuitepro_path.stat.exists
+
+- name: Run Burp Suite Pro unattended installer
+  command: /var/tmp/burpsuitepro_install.sh -q -dir /opt/burpsuitepro
+  args:
+    creates: /opt/burpsuitepro/BurpSuitePro
+  when: not burpsuitepro_path.stat.exists
+
+- name: Create symlink for burpsuite pro
+  file:
+    src: /opt/burpsuitepro/BurpSuitePro
+    dest: /usr/local/bin/burpsuitepro
+    state: link
+
+- name: Clean up installer
+  file:
+    path: /var/tmp/burpsuitepro_install.sh
+    state: absent
+
+# Download Jython standalone JAR for Burp Python extensions
+- name: Check if Jython standalone JAR is already present
+  stat:
+    path: /opt/jython/jython-standalone.jar
+  register: jython_jar_path
+
+- name: Create Jython directory
+  file:
+    path: /opt/jython
+    state: directory
+    mode: "0755"
+  when: not jython_jar_path.stat.exists
+
+- name: Download Jython standalone JAR
+  get_url:
+    url: "{{ jython_url }}"
+    dest: "/opt/jython/jython-standalone.jar"
+    mode: "0644"
+  when: not jython_jar_path.stat.exists
+
+# Save the license key to a local file for the user to copy-paste during
+# the first-launch GUI activation
+- name: Save license key for manual activation
+  copy:
+    content: "{{ burpsuitepro_license }}"
+    dest: "/opt/burpsuitepro/license_key.txt"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: "0600"
+  when: burpsuitepro_license | length > 0
+  no_log: true

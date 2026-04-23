@@ -1,0 +1,63 @@
+{
+  "policies": {
+    "BlockAboutConfig": false,
+    "DisplayBookmarksToolbar": "newtab",
+    "Bookmarks": [
+      {
+        "Title": "Nessus",
+        "URL": "https://127.0.0.1:8834",
+        "Placement": "toolbar"
+      },
+      {
+        "Title": "Burp",
+        "URL": "http://127.0.0.1:8080",
+        "Placement": "toolbar"
+      }
+    ],
+    "Extensions": {
+      "Install": [
+        "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/latest/foxyproxy-standard/latest.xpi"
+      ]
+    },
+    "Homepage": {
+      "URL": "about:blank",
+      "Locked": false,
+      "StartPage": "homepage"
+    },
+    "FirefoxHome": {
+      "Search": false,
+      "TopSites": false,
+      "SponsoredTopSites": false,
+      "Highlights": false,
+      "Pocket": false,
+      "SponsoredPocket": false,
+      "Snippets": false
+    },
+    "DNSOverHTTPS": {
+      "Enabled": false
+    },
+    "DisablePocket": true,
+    "DisableTelemetry": true,
+    "CaptivePortal": false,
+    "DontCheckDefaultBrowser": true,
+    "NoDefaultBookmarks": true,
+    "OverrideFirstRunPage": "",
+    "OverridePostUpdatePage": "",
+    "NetworkPrediction": false,
+    "Preferences": {
+      "privacy.donottrackheader.enabled": true,
+      "browser.tabs.warnOnClose": false,
+      "browser.aboutConfig.showWarning": false,
+      "keyword.enabled": false,
+      "NetworkPrediction": false,
+      "network.dns.disablePrefetch": true
+    },
+    "SearchBar": "separate",
+    "SearchEngines": {
+      "Default": "DuckDuckGo",
+      "PreventInstalls": false
+    },
+    "SearchSuggestEnabled": false
+  }
+}

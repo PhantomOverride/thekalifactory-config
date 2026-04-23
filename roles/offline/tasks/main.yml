@@ -1,0 +1,4 @@
+- name: Install offline packages
+  ansible.builtin.apt:
+    name: "{{ offline_packages }}"
+    state: present

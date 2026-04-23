@@ -1,0 +1,37 @@
+# Disable XFCE screensaver and automatic screen lock system-wide
+# You probably don't want this for physical machines
+- name: Ensure XFCE screensaver config directory exists
+  file:
+    path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml
+    state: directory
+    mode: "0755"
+
+- name: Deploy xfce4-screensaver system-wide configuration
+  copy:
+    dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-screensaver.xml
+    content: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <channel name="xfce4-screensaver" version="1.0">
+        <property name="saver" type="empty">
+          <property name="enabled" type="bool" value="false"/>
+          <property name="idle-activation-enabled" type="bool" value="false"/>
+        </property>
+        <property name="lock" type="empty">
+          <property name="enabled" type="bool" value="false"/>
+          <property name="lock-screen-saver" type="bool" value="false"/>
+        </property>
+      </channel>
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Disable DPMS in Xfce
+  become: true
+  become_user: "{{ the_user }}"
+  environment:
+    DISPLAY: ":0"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+  command: >
+    xfconf-query -c xfce4-power-manager
+    -p /xfce4-power-manager/dpms-enabled
+    -n -t bool -s false

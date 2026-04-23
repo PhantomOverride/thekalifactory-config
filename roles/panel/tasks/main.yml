@@ -1,0 +1,33 @@
+# Panel shortcuts for the user
+- name: Ensure XFCE panel config directory exists for the user
+  ansible.builtin.file:
+    path: /home/{{ the_user }}/.config/xfce4/panel
+    state: directory
+    mode: "0755"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+
+- name: Ensure launcher-5 directory exists for the user
+  ansible.builtin.file:
+    path: /home/{{ the_user }}/.config/xfce4/panel/launcher-5
+    state: directory
+    mode: "0755"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+
+- name: Add Settings Manager shortcut as its own launcher
+  ansible.builtin.copy:
+    src: settings-manager.desktop
+    dest: /home/{{ the_user }}/.config/xfce4/panel/launcher-5/settings-manager.desktop
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: "0644"
+
+- name: Add Sublime Text shortcut to launcher-5
+  ansible.builtin.copy:
+    src: sublime-text.desktop
+    dest: /home/{{ the_user }}/.config/xfce4/panel/launcher-5/sublime-text.desktop
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: "0644"
+

@@ -1,0 +1,10 @@
+locale: "en_GB.UTF-8"
+locale_formatting: "sv_SE.UTF-8"
+keyboard_layout: "se"
+timezone: "Europe/Stockholm"
+
+# US English with US keyboard:
+# locale: "en_US.UTF-8"
+# locale_formatting: "en_US.UTF-8"
+# keyboard_layout: "us"
+# timezone: "America/New_York"

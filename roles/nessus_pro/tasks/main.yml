@@ -1,0 +1,31 @@
+# Download nessus pro .deb if not exist and save license key for manual activation
+- name: Ensure /opt/nessus directory exists
+  ansible.builtin.file:
+    path: /opt/nessus
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Check if Nessus Pro .deb is already present
+  ansible.builtin.stat:
+    path: "{{ nessus_pro_deb_dest }}"
+  register: nessus_pro_deb
+
+- name: Download Nessus Pro .deb into /opt/nessus
+  ansible.builtin.get_url:
+    url: "{{ nessus_pro_deb_url }}"
+    dest: "{{ nessus_pro_deb_dest }}"
+    mode: "0644"
+  when: not (nessus_pro_deb.stat.exists | default(false))
+
+- name: Save license key for manual activation
+  ansible.builtin.copy:
+    content: "{{ nessus_pro_license }}"
+    dest: "/opt/nessus/license_key.txt"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+    mode: "0600"
+  when: nessus_pro_license | length > 0
+  no_log: true
+

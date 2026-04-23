@@ -1,0 +1,28 @@
+- name: Create downloads directory
+  ansible.builtin.file:
+    path: "{{ downloads_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+
+- name: Download files (with checksum)
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ downloads_dir }}/{{ item.filename }}"
+    checksum: "sha256:{{ item.sha256 }}"
+    mode: "0644"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+  loop: "{{ downloads }}"
+  when: item.sha256 is defined
+
+- name: Download files (without checksum)
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ downloads_dir }}/{{ item.filename }}"
+    mode: "0644"
+    owner: "{{ the_user }}"
+    group: "{{ the_user }}"
+  loop: "{{ downloads }}"
+  when: item.sha256 is not defined

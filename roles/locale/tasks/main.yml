@@ -1,0 +1,52 @@
+- name: Ensure locales package is installed
+  apt:
+    name: locales
+    state: present
+
+- name: Generate locale
+  locale_gen:
+    name: "{{ locale }}"
+    state: present
+
+- name: Generate formatting locale
+  locale_gen:
+    name: "{{ locale_formatting }}"
+    state: present
+  when: locale_formatting != locale
+
+- name: Set default locale
+  copy:
+    content: |
+      LANG={{ locale }}
+      LC_NUMERIC={{ locale_formatting }}
+      LC_TIME={{ locale_formatting }}
+      LC_MONETARY={{ locale_formatting }}
+      LC_PAPER={{ locale_formatting }}
+      LC_MEASUREMENT={{ locale_formatting }}
+      LC_ADDRESS={{ locale_formatting }}
+      LC_TELEPHONE={{ locale_formatting }}
+    dest: /etc/default/locale
+    mode: "0644"
+
+- name: Set keyboard layout
+  copy:
+    content: |
+      XKBMODEL="pc105"
+      XKBLAYOUT="{{ keyboard_layout }}"
+      XKBVARIANT=""
+      XKBOPTIONS=""
+      BACKSPACE="guess"
+      KEYMAP={{ keyboard_layout }}
+    dest: /etc/default/keyboard
+    mode: "0644"
+
+- name: Set console keymap
+  lineinfile:
+    path: /etc/vconsole.conf
+    regexp: "^KEYMAP="
+    line: "KEYMAP={{ keyboard_layout }}"
+    create: true
+
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"

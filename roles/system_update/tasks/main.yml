@@ -1,0 +1,19 @@
+# apt update
+- name: Update apt cache
+  apt:
+    update_cache: true
+
+# apt upgrade
+- name: Upgrade apt packages
+  apt:
+    upgrade: yes
+
+# apt dist-upgrade
+- name: Perform dist-upgrade for packages
+  apt:
+    upgrade: dist
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required

@@ -1,0 +1,39 @@
+# Playbook with everything in it
+# To get everything:
+# ansible-playbook everything.yml -i "10.20.30.40," -K -k --ask-vault-pass
+#
+# If you will have internet you can skip offline and extra download tasks:
+# ansible-playbook everything.yml -i "10.20.30.40," -K -k --skip-tags=offline,downloads --ask-vault-pass
+#
+- name: Configure Kali host
+  hosts: all
+  become: true
+  vars_files:
+    - vars/licenses.yml
+    - vars/vars.yml
+
+  roles:
+    - system_update
+    - locale
+    - sublime
+    - packages
+    - firefox
+    - burpsuite
+    - helper_scripts
+    - nessus_pro
+    - panel
+    - role: github_repos
+      tags: repos
+    - role: downloads
+      tags: downloads
+    - screensaver_disable
+    - shared_folders
+    - role: offline
+      tags: offline
+
+  post_tasks:
+    - name: Warn if reboot is required
+      debug:
+        msg: "REBOOT REQUIRED — please reboot this host manually when ready"
+      when: reboot_required.stat.exists
+

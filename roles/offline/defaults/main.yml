@@ -1,0 +1,3 @@
+# Packages to install for the offline role
+offline_packages:
+  - kali-linux-everything
