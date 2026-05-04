@@ -20,14 +20,14 @@ Edit `vars/vars.yml` to set the target username (default: `kali`).
 
 Run as intended:
 ```bash
-ansible-playbook everything.yml -i "10.20.30.40," --ask-become-pass --ask-vault-pass --skip-tags=offline
+ansible-playbook everything.yml -i "10.20.30.40," -u kali --ask-pass --ask-become-pass --ask-vault-pass --skip-tags=offline
 ```
 
 Remove `--skip-tags` to add all roles.
 
 You can of course also omit other roles:
 ```bash
-ansible-playbook everything.yml -i "10.20.30.40," --ask-become-pass --ask-vault-pass --skip-tags=offline,downloads,repos
+ansible-playbook everything.yml -i "10.20.30.40," -u kali --ask-pass --ask-become-pass --ask-vault-pass --skip-tags=offline,downloads,repos
 ```
 
 If you're running the playbook on the to-be-provisioned machine itself, then reference localhost as so:
