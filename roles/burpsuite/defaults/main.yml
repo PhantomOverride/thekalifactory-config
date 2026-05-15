@@ -1,6 +1,14 @@
 # Download URL for the Burp Suite Pro installer script
+
 # Get the latest URL from https://portswigger.net/burp/releases
-burpsuitepro_url: "https://portswigger.net/burp/releases/download?product=pro&type=Linux"
+#burpsuitepro_url: "https://portswigger.net/burp/releases/download?product=pro&type=Linux"
+# Optional sha256 checksum for the Burp Suite Pro installer (e.g. "sha256:abc123...") Leave empty to skip verification.
+#burpsuitepro_checksum: ""
+
+# Pinning one release so we can have a known checksum
+burpsuitepro_url: "https://portswigger.net/burp/releases/download?product=desktop&version=2026.4.2&type=Linux"
+# Optional sha256 checksum for the Burp Suite Pro installer (e.g. "sha256:abc123...") Leave empty to skip verification.
+burpsuitepro_checksum: "sha256:8628b7ea448eb66e627e3df39bfa0f44083ebaef36575b36dafd59cd6a35b5fa"
 
 # The OS user who will own the files
 # Can be set here but is overridden by vars/vars.yml
@@ -9,10 +17,6 @@ the_user: kali
 # Jython standalone JAR URL (used for Burp Python extensions)
 jython_version: "2.7.4"
 jython_url: "https://repo1.maven.org/maven2/org/python/jython-standalone/{{ jython_version }}/jython-standalone-{{ jython_version }}.jar"
-
-# Optional sha256 checksum for the Burp Suite Pro installer (e.g. "sha256:abc123...")
-# Leave empty to skip verification.
-burpsuitepro_checksum: "sha256:9410a03833c464ed65c19abce1f4ca30cdcd842babb041abe5d0ea5a5161657c"
 
 # License can be placed here or in vars/licenses.yml
 burpsuitepro_license: ""
