@@ -32,11 +32,12 @@
     creates: /opt/burpsuitepro/BurpSuitePro
   when: not burpsuitepro_path.stat.exists
 
-- name: Create symlink for burpsuite pro
-  file:
-    src: /opt/burpsuitepro/BurpSuitePro
-    dest: /usr/local/bin/burpsuitepro
-    state: link
+# New installer apparently already does this
+#- name: Create symlink for burpsuite pro
+#  file:
+#    src: /opt/burpsuitepro/BurpSuitePro
+#    dest: /usr/local/bin/burpsuitepro
+#    state: link
 
 - name: Clean up installer
   file:
