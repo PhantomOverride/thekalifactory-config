@@ -1,3 +1,9 @@
+- name: Get XDG_CURRENT_DESKTOP
+  command: /bin/sh -c 'printf "%s" "${XDG_CURRENT_DESKTOP:-}"'
+  register: xdg_current_desktop
+  changed_when: false
+  failed_when: false
+
 # Disable XFCE screensaver and automatic screen lock system-wide
 # You probably don't want this for physical machines
 - name: Ensure XFCE screensaver config directory exists
@@ -5,6 +11,7 @@
     path: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml
     state: directory
     mode: "0755"
+  when: "'xfce' in xdg_current_desktop.stdout | lower"
 
 - name: Deploy xfce4-screensaver system-wide configuration
   copy:
@@ -24,6 +31,7 @@
     owner: root
     group: root
     mode: "0644"
+  when: "'xfce' in xdg_current_desktop.stdout | lower"
 
 - name: Disable DPMS in Xfce
   become: true
@@ -35,3 +43,4 @@
     xfconf-query -c xfce4-power-manager
     -p /xfce4-power-manager/dpms-enabled
     -n -t bool -s false
+  when: "'xfce' in xdg_current_desktop.stdout | lower"
