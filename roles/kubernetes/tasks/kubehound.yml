@@ -1,0 +1,28 @@
+- name: Add Podman Docker compatability layer
+  ansible.builtin.apt:
+    name: podman-docker
+    state: present
+
+- name: Enable and start podman.socket
+  ansible.builtin.systemd:
+    name: podman.socket
+    enabled: true
+    state: started
+  become: true
+
+- name: Create Kubehound directory
+  file:
+    path: /opt/kubehound
+    state: directory
+
+- name: Download latest KubeHound release
+  ansible.builtin.get_url:
+    url: "https://github.com/DataDog/KubeHound/releases/latest/download/kubehound-{{ ansible_system | replace('GNU/', '') }}-{{ ansible_architecture }}"
+    dest: /opt/kubehound/kubehound
+    mode: '0755'
+
+- name: Prepare Kubehound for offline use
+  ansible.builtin.command: ./kubehound backend up
+  args:
+    chdir: /opt/kubehound/ 
+  tags: offline
