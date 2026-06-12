@@ -1,0 +1,35 @@
+- name: Ensure kube-bench directory exists
+  ansible.builtin.file:
+    path: /opt/kube-bench
+    state: directory
+    mode: '0755'
+
+- name: Get latest kube-bench release info from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/aquasecurity/kube-bench/releases/latest
+    return_content: true
+  register: kubebench_release
+
+- name: Extract latest kube-bench version and deb asset URL
+  ansible.builtin.set_fact:
+    kubebench_latest_version: "{{ kubebench_release.json.tag_name | trim | regex_replace('^v', '') }}"
+    kubebench_deb_url: >-
+      {{ kubebench_release.json.assets
+         | selectattr('name', 'search', 'linux_amd64\.deb$')
+         | map(attribute='browser_download_url')
+         | first }}
+
+- name: Fail if linux_amd64 deb asset was not found
+  ansible.builtin.fail:
+    msg: "Could not find kube-bench linux_amd64 .deb asset in latest release"
+  when: kubebench_deb_url is not defined
+
+- name: Download latest kube-bench deb package
+  ansible.builtin.get_url:
+    url: "{{ kubebench_deb_url }}"
+    dest: /opt/kube-bench/kube-bench_{{ kubebench_latest_version }}_linux_amd64.deb
+    mode: '0644'
+
+- name: Install kube-bench
+  ansible.builtin.apt:
+    deb: "/opt/kube-bench/kube-bench_{{ kubebench_latest_version }}_linux_amd64.deb"

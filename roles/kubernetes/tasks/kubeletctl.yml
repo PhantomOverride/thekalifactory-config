@@ -1,0 +1,57 @@
+
+- name: Get latest kubeletctl release info from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/cyberark/kubeletctl/releases/latest
+    return_content: true
+  register: kubeletctl_release
+
+- name: Extract latest kubeletctl version and asset URL
+  ansible.builtin.set_fact:
+    kubeletctl_latest_version: "{{ kubeletctl_release.json.tag_name | trim | regex_replace('^v', '') }}"
+    kubeletctl_download_url: >-
+      {{ kubeletctl_release.json.assets
+         | selectattr('name', 'equalto', 'kubeletctl_linux_amd64')
+         | map(attribute='browser_download_url')
+         | first }}
+
+- name: Get current kubeletctl version (if installed)
+  ansible.builtin.command: kubeletctl version
+  register: kubeletctl_current_cmd
+  changed_when: false
+  failed_when: false
+
+- name: Extract current kubeletctl version
+  ansible.builtin.set_fact:
+    kubeletctl_current_version: >-
+      {{ (kubeletctl_current_cmd.stdout_lines
+          | select('search', '^Version:\s*')
+          | list
+          | first
+          | regex_replace('^Version:\s*', ''))
+         | default('', true) }}
+  when: kubeletctl_current_cmd.rc == 0
+
+- name: Create kubeletctl directory
+  file:
+    path: /opt/kubeletctl
+    state: directory
+
+- name: Download latest kubeletctl binary
+  uri:
+    url: "{{ kubeletctl_download_url }}"
+    dest: /opt/kubeletctl/kubeletctl
+    force: true
+  when: kubeletctl_current_version | default('') != kubeletctl_latest_version
+
+- name: Make /opt/kubeletctl/kubeletctl executable
+  ansible.builtin.file:
+    path: /opt/kubeletctl/kubeletctl
+    mode: '0755'
+
+- name: Symlink kubeletctl into /usr/local/bin
+  ansible.builtin.file:
+    src: /opt/kubeletctl/kubeletctl
+    dest: /usr/local/bin/kubeletctl
+    state: link
+    owner: root
+    group: root

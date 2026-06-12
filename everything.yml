@@ -30,6 +30,7 @@
     - shared_folders
     - role: offline
       tags: offline
+    - kubernetes
 
   post_tasks:
     - name: Warn if reboot is required
