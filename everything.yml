@@ -45,7 +45,8 @@
       tags: reference
     - role: offline
       tags: offline
-    - kubernetes
+    - role: kubernetes
+      tags: kubernetes
 
   post_tasks:
     - name: Warn if reboot is required
