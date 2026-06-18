@@ -1,0 +1,7 @@
+smartcard_packages:
+  - vsmartcard-vpcd
+  - libpam-pkcs11
+  - scdaemon
+  - libccid
+  - opensc-pkcs11
+  - pcscd

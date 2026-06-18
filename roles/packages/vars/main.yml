@@ -50,3 +50,20 @@ apt_packages:
   - python3-dnspython
   - golang
   - xplico
+  - wget
+  - git
+  - vim
+  - gcc-12
+  - make
+  - terminator
+  - tmux
+  - wireshark
+  - rsync
+  - ssh
+  - flameshot
+  - lshw
+  - remmina-common
+  - obsidian
+  - podman
+  - podman-compose
+  - skopeo

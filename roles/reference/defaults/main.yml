@@ -1,0 +1,13 @@
+# Directory where reference repos will be cloned
+reference_repos_dir: /opt/reference
+
+reference_repos:
+  - https://github.com/Orange-Cyberdefense/ocd-mindmaps.git
+  - https://github.com/swisskyrepo/InternalAllTheThings.git
+  - https://github.com/LOLBAS-Project/LOLBAS.git
+  - https://github.com/HackTricks-wiki/hacktricks
+  - https://github.com/mantvydasb/RedTeaming-Tactics-and-Techniques.git
+  - https://github.com/swisskyrepo/PayloadsAllTheThings.git
+  - https://github.com/shieldfy/API-Security-Checklist.git
+  - https://github.com/OWASP/CheatSheetSeries.git
+

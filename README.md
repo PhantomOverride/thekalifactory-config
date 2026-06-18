@@ -4,6 +4,16 @@ Ansible playbook that provisions and configures a Kali Linux machine for penetra
 
 ## Usage
 
+### TL;DR
+
+```bash
+# Remote host via SSH
+ansible-playbook default.yml -i "10.20.30.40," -u kali -k -K --ask-vault-pass
+
+# Localhost
+ansible-playbook default.yml -i "localhost," --connection=local -K --ask-vault-pass
+```
+
 ### 1. Set up license keys
 
 ```bash

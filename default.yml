@@ -1,11 +1,7 @@
-# Playbook with everything in it
-# To get everything:
-# ansible-playbook everything.yml -i "10.20.30.40," -K -k --ask-vault-pass
+# Default playbook — everything except offline
+# ansible-playbook default.yml -i "10.20.30.40," -K -k --ask-vault-pass
 #
-# If you will have internet you can skip offline and extra download tasks:
-# ansible-playbook everything.yml -i "10.20.30.40," -K -k --skip-tags=offline,downloads --ask-vault-pass
-#
-- name: Configure Kali host
+- name: Configure Kali host (default)
   hosts: all
   become: true
   vars_files:
@@ -43,13 +39,9 @@
       tags: smartcard
     - role: reference
       tags: reference
-    - role: offline
-      tags: offline
-    - kubernetes
 
   post_tasks:
     - name: Warn if reboot is required
       debug:
         msg: "REBOOT REQUIRED — please reboot this host manually when ready"
       when: reboot_required.stat.exists
-

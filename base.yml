@@ -1,0 +1,31 @@
+# Lightweight playbook — base configuration only
+# ansible-playbook base.yml -i "10.20.30.40," -K -k
+#
+- name: Configure Kali host (base)
+  hosts: all
+  become: true
+  vars_files:
+    - vars/licenses.yml
+    - vars/vars.yml
+
+  roles:
+    - role: system_update
+      tags: system_update
+    - role: locale
+      tags: locale
+    - role: firefox
+      tags: firefox
+    - role: helper_scripts
+      tags: helper_scripts
+    - role: panel
+      tags: panel
+    - role: screensaver_disable
+      tags: screensaver_disable
+    - role: shared_folders
+      tags: shared_folders
+
+  post_tasks:
+    - name: Warn if reboot is required
+      debug:
+        msg: "REBOOT REQUIRED — please reboot this host manually when ready"
+      when: reboot_required.stat.exists
