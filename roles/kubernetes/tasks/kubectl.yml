@@ -1,0 +1,41 @@
+- name: Get latest kubectl version
+  uri:
+    url: https://dl.k8s.io/release/stable.txt
+    return_content: yes
+  register: latest_version
+
+- name: Get current kubectl version (if installed)
+  ansible.builtin.command: kubectl version --client --output=yaml
+  register: current_version_cmd
+  changed_when: false
+  failed_when: false
+
+- name: Extract current kubectl version (if installed)
+  ansible.builtin.set_fact:
+    current_version: >-
+      {{ (current_version_cmd.stdout | from_yaml).clientVersion.gitVersion
+         if current_version_cmd.rc == 0 else '' }}
+
+- name: Create kubectl directory
+  file:
+    path: /opt/kubectl
+    state: directory
+
+- name: Download latest kubectl release
+  uri:
+    url: https://dl.k8s.io/release/{{ latest_version.content }}/bin/linux/amd64/kubectl
+    dest: /opt/kubectl
+  when: current_version != latest_version.content
+
+- name: Make /opt/kubectl/kubectl executable for all users
+  ansible.builtin.file:
+    path: /opt/kubectl/kubectl
+    mode: '0755'
+
+- name: Symlink kubectl into /usr/local/bin
+  ansible.builtin.file:
+    src: /opt/kubectl/kubectl
+    dest: /usr/local/bin/kubectl
+    state: link
+    owner: root
+    group: root

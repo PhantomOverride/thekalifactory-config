@@ -1,0 +1,22 @@
+- name: Include Kubectl tasks
+  ansible.builtin.include_tasks: kubectl.yml
+
+- name: Include Kubelet tasks
+  ansible.builtin.include_tasks: kubeletctl.yml
+
+- name: Make sure Podman exists
+  ansible.builtin.apt:
+    name: podman
+    state: present
+
+- name: Pull Kube-hunter Image
+  become_user: "{{ the_user }}"
+  containers.podman.podman_image:
+    name: docker.io/aquasec/kube-hunter
+    state: present
+
+- name: Include Kubehound tasks
+  ansible.builtin.include_tasks: kubehound.yml
+
+- name: Include Kube-bench
+  ansible.builtin.include_tasks: kubebench.yml
