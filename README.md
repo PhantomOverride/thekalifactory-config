@@ -81,8 +81,10 @@ Creates a `.venv` and installs `requirements.txt` for each repo in `/opt/github-
 
 Run these on freshly cloned VMs to reset machine identity:
 
-1. `/opt/scripts/post-deployment-1.zsh` - resets keys, IDs, history etc
-2. `/opt/scripts/post-deployment-2.zsh` - after rebooting sets new keys and passwords
+1. In your current interactive zsh session, run `source /opt/scripts/post-deployment-1.zsh` to reset keys, IDs, and history, then reboot. Close other terminal sessions first. Sourcing is required to clear the current session's history and disable history saving until it closes.
+2. After rebooting, run `/opt/scripts/post-deployment-2.zsh` to check LUKS unlock methods, set new passwords, optionally expand root storage, and re-encrypt the disk with new keys.
+
+The LUKS check can also be run separately with `/opt/scripts/luks-check-unlock-methods.zsh`. It displays a large warning and pauses if enrolled tokens or configured alternative unlock methods are found; it does not change them. Ordinary LUKS keyslots do not distinguish passwords from keyfiles, so the check cannot rule out external keyfiles, recovery secrets, or keys embedded in an initramfs.
 
 ## Roles
 
