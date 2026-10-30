@@ -12,6 +12,12 @@ ansible-playbook default.yml -i "10.20.30.40," -u kali -k -K --ask-vault-pass
 
 # Localhost
 ansible-playbook default.yml -i "localhost," --connection=local -K --ask-vault-pass
+
+# Remote host via SSH without offline, downloads, or repository tasks
+ansible-playbook default.yml -i "10.20.30.40," -u kali -k -K --ask-vault-pass --skip-tags=offline,downloads,repos
+
+# Localhost without offline, downloads, or repository tasks
+ansible-playbook default.yml -i "localhost," --connection=local -K --ask-vault-pass --skip-tags=offline,downloads,repos
 ```
 
 ### 1. Set up license keys
